@@ -1,0 +1,14 @@
+﻿query GetEvents { getEvents { id name startingTime where lat lon description discipline distance intensity plannedAvg komoot } }
+
+mutation AddEvent($name: String!, $startingTime: String!, $where: String!, $lat: Float!,
+$lon: Float!, $description: String!, $discipline: String, $distance: Float,
+$intensity: Float, $plannedAvg: Float, $komoot: AWSURL){
+  createEvent(name:$name,startingTime: $startingTime, where: $where, lat: $lat, lon: $lon, description: $description,
+discipline: $discipline, distance: $distance, intensity: $intensity, plannedAvg:
+$plannedAvg, komoot: $komoot )
+  { id name startingTime where lat lon description discipline distance intensity plannedAvg komoot }
+}
+
+subscription SubscribeNewEvent {
+  subscribeNewEvent { id name startingTime where lat lon description discipline distance intensity plannedAvg komoot }
+}

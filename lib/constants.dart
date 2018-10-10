@@ -1,0 +1,2 @@
+const AWS_APP_SYNC_ENDPOINT = "https://5xdsvbuujrhntjgmzgo4d2rbku.appsync-api.eu-central-1.amazonaws.com/graphql"; // like https://xxx.appsync-api.eu-central-1.amazonaws.com/graphql
+const AWS_APP_SYNC_KEY = "da2-rhfmtmez4bcttd7do7iepvr7gq";
