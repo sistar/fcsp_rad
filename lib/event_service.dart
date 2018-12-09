@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 class EventService {
 
   static const CHANNEL_NAME = 'de.sistar.fcsp_rad';
-  static const QUERY_GET_ALL_EVENTS = 'listEvents';
+  static const QUERY_GET_ALL_EVENTS = 'getEvents';
   static const MUTATION_NEW_EVENT = 'createEvent';
   static const SUBSCRIBE_NEW_EVENT = 'subscribeNewEvent';
   static const SUBSCRIBE_NEW_EVENT_RESULT = 'subscribeNewEventResult';
@@ -32,9 +32,9 @@ class EventService {
     return values.map((value) => Event.fromJson(value)).toList();
   }
 
-  Future<Event> sendEvent(String content, String sender) async {
+  Future<Event> sendEvent(Event content, String sender) async {
     final params = {
-      "content": content,
+      "content": Event.toJson(content),
       "sender": sender
     };
     String jsonString = await APP_SYNC_CHANNEL.invokeMethod(MUTATION_NEW_EVENT, _buildParams(otherParams: params));

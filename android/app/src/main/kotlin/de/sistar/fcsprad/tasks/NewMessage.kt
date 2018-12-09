@@ -12,29 +12,23 @@ import io.flutter.plugin.common.MethodChannel
 class NewMessage(private val client: AWSAppSyncClient, private val call: MethodCall, private val result: MethodChannel.Result) {
 
     operator fun invoke() {
+        val content = call.argument<HashMap<String,Any>>("content")
 
-        val name = call.argument<String>("name")
-        val where = call.argument<String>("where")
-        val startingTime = call.argument<String>("startingTime")
-        val description = call.argument<String>("description")
-        val distance = call.argument<Double>("distance")
-        val intensity = call.argument<Double>("intensity")
-        val lat = call.argument<Double>("lat")
-        val lon = call.argument<Double>("lon")
-        val komoot = call.argument<String>("komoot")
-        val plannedAvg = call.argument<Double>("plannedAvg")
-        val mutation = AddEventMutation.builder()
-                .name(name)
-                .where(where)
-                .startingTime(startingTime)
-                .description(description)
-                .distance(distance)
-                .intensity(intensity)
-                .lat(lat)
-                .lon(lon)
-                .plannedAvg(plannedAvg)
-                .komoot(komoot)
-                .build()
+        val builder = AddEventMutation.builder()
+
+        builder.name(content?.get("name").toString())
+        builder.where(content?.get("where").toString())
+        builder.startingTime(content?.get("startingTime").toString())
+        builder.description(content?.get("description").toString())
+        builder.discipline(content?.get("discipine").toString())
+        builder.distance((content?.get("distance") as Double))
+        builder.intensity((content.get("intensity") as Double))
+        builder.lat((content.get("lat") as Double))
+        builder.lon((content.get("lon") as Double))
+        builder.plannedAvg((content.get("plannedAvg") as Double))
+        builder.komoot(content.get("komoot").toString())
+
+        val mutation = builder.build()
 
         client.mutate(mutation).enqueue(object : GraphQLCall.Callback<AddEventMutation.Data>() {
 
@@ -59,7 +53,7 @@ class NewMessage(private val client: AWSAppSyncClient, private val call: MethodC
                         "where" to it.where(),
                         "startingTime" to it.startingTime(),
                         "description" to it.description(),
-                        "description" to it.distance(),
+                        "distance" to it.distance(),
                         "intensity" to it.intensity(),
                         "lat" to it.lat(),
                         "lon" to it.lon(),

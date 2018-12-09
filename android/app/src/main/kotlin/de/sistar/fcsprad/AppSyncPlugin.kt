@@ -16,7 +16,7 @@ class AppSyncPlugin private constructor(private val registrar: PluginRegistry.Re
 
     companion object {
         const val CHANNEL_NAME = "de.sistar.fcsp_rad"
-        const val QUERY_GET_ALL_EVENTS = "listEvents"
+        const val QUERY_GET_ALL_EVENTS = "getEvents"
         const val MUTATION_NEW_EVENT = "createEvent"
         const val SUBSCRIBE_NEW_EVENT = "subscribeNewEvent"
         const val SUBSCRIBE_NEW_EVENT_RESULT = "subscribeNewEventResult"

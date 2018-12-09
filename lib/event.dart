@@ -11,18 +11,19 @@ class Event extends Object {
   final String where;
   final double lat;
   final double lon;
-  final String when;
+  final String startingTime;
   final String description;
   final String discipline;
-  final String distance;
+  final double distance;
   final double intensity;
   final double plannedAvg;
   final String komoot;
 
-  Event({this.id, this.name, this.where,this.lat,this.lon,this.when,this.description,
+  Event({this.id, this.name, this.where,this.lat,this.lon,this.startingTime,this.description,
   this.discipline,this.distance,this.intensity,this.plannedAvg,this.komoot});
 
 
   factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);
+  static toJson(Event event) => _$EventToJson(event);
 
 }

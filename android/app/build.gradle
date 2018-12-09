@@ -26,7 +26,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -40,7 +40,7 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "de.sistar.fcsprad"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -53,6 +53,12 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 flutter {
@@ -62,13 +68,31 @@ flutter {
 apply plugin: 'com.amazonaws.appsync'
 
 dependencies {
-    implementation 'com.amazonaws:aws-android-sdk-appsync:2.6.26'
+
+    implementation group: 'com.amazonaws', name: 'aws-android-sdk-appsync', version: '2.7.0'
+    implementation group: 'com.amazonaws', name: 'aws-android-sdk-appsync-api', version: '2.7.0'
+    implementation "com.google.code.gson:gson:2.8.5"
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
     implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
-    implementation 'com.android.support:support-v4:27.1.1'
+    implementation group: 'com.android.support', name: 'appcompat-v7', version: '28.0.0'
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation  group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+
+    // "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk8
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlin_version
+
     testImplementation 'junit:junit:4.12'
+    // Robolectric environment
+    androidTestImplementation "androidx.test.ext:junit:1.0.0"
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test:rules:1.1.0'
+    testImplementation 'androidx.test:core:1.0.0'
+    testImplementation 'org.robolectric:robolectric:4.0.2'
+    testImplementation 'org.mockito:mockito-core:1.10.19'
+
+    androidTestImplementation "com.google.truth:truth:0.42"
+
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }

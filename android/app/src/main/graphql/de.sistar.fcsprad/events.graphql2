@@ -27,7 +27,7 @@ type Event {
   lon: Float
   name: String
   plannedAvg: Float
-  when: AWSDateTime
+  startingTime: AWSDateTime
   where: String
 }
 
@@ -40,7 +40,7 @@ type Mutation {
   #  Comment on an event.
   commentOnEvent(content: String!, createdAt: String!, eventId: ID!): Comment
   #  Create a single event.
-  createEvent(description: String!, discipline: String, distance: Float, intensity: Float, komoot: AWSURL, lat: Float!, lon: Float!, name: String!, plannedAvg: Float, when: String!, where: String!): Event
+  createEvent(description: String!, discipline: String, distance: Float, intensity: Float, komoot: AWSURL, lat: Float!, lon: Float!, name: String!, plannedAvg: Float, startingTime: String!, where: String!): Event
   #  Delete a single event by id.
   deleteEvent(id: ID!): Event
 }
@@ -68,7 +68,7 @@ input TableEventFilterInput {
   description: TableStringFilterInput
   id: TableIDFilterInput
   name: TableStringFilterInput
-  when: TableStringFilterInput
+  startingTime: TableStringFilterInput
   where: TableStringFilterInput
 }
 

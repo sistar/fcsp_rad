@@ -4,10 +4,13 @@
     <!-- The INTERNET permission is required for development. Specifically,
          flutter needs it to communicate with the running application
          to allow setting breakpoints, to provide hot reload, etc.
+
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
 
 
@@ -22,6 +25,9 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="fcsp_rad"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAyN1BthqX_T0VsGT6a4qZj56buc5gSQww"/>
+
         <!-- ... -->
         <!-- Service paho for retrieve all data in background -->
         <service android:name="org.eclipse.paho.android.service.MqttService" />
@@ -44,5 +50,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
     </application>
 </manifest>

@@ -20,7 +20,14 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   json_annotation: ^1.2.0
-
+  random_string: ^0.0.2
+  intl: ^0.15.7
+  uuid: ^1.0.3
+  geolocator: '^2.1.0'
+  google_maps_flutter:
+     git:
+       url: git://github.com/flutter/plugins
+       path: packages/google_maps_flutter
 dev_dependencies:
   flutter_test:
     sdk: flutter

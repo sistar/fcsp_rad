@@ -44,7 +44,7 @@ class SubscriptionToNewEvent(private val client: AWSAppSyncClient, private val c
                             "startingTime" to it.startingTime(),
                             "description" to it.description(),
                             "description" to it.description(),
-                            "description" to it.distance(),
+                            "distance" to it.distance(),
                             "intensity" to it.intensity(),
                             "lat" to it.lat(),
                             "lon" to it.lon(),
