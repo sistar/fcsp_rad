@@ -2,9 +2,7 @@ package de.sistar.fcsprad
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient
 import com.amazonaws.mobileconnectors.appsync.sigv4.BasicAPIKeyAuthProvider
 import com.amazonaws.regions.Regions
-import de.sistar.fcsprad.tasks.ListEvents
-import de.sistar.fcsprad.tasks.NewMessage
-import de.sistar.fcsprad.tasks.SubscriptionToNewEvent
+import de.sistar.fcsprad.tasks.*
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
@@ -20,6 +18,8 @@ class AppSyncPlugin private constructor(private val registrar: PluginRegistry.Re
         const val MUTATION_NEW_EVENT = "createEvent"
         const val SUBSCRIBE_NEW_EVENT = "subscribeNewEvent"
         const val SUBSCRIBE_NEW_EVENT_RESULT = "subscribeNewEventResult"
+        const val ADD_PARTICIPANT = "addParticipant"
+        const val REMOVE_PARTICIPANT = "removeParticipant"
 
         fun registerWith(registrar: PluginRegistry.Registrar) {
             val channel = MethodChannel(registrar.messenger(), CHANNEL_NAME)
@@ -46,6 +46,8 @@ class AppSyncPlugin private constructor(private val registrar: PluginRegistry.Re
             QUERY_GET_ALL_EVENTS -> ListEvents(client!!, call, result)()
             MUTATION_NEW_EVENT -> NewMessage(client!!, call, result)()
             SUBSCRIBE_NEW_EVENT -> (SubscriptionToNewEvent(client!!, call, channel))()
+            ADD_PARTICIPANT -> AddParticipant(client!!,call,result)()
+            REMOVE_PARTICIPANT -> RemoveParticipant(client!!, call, result)()
             else -> result.notImplemented()
         }
     }

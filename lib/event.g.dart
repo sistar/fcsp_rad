@@ -19,7 +19,16 @@ Event _$EventFromJson(Map<String, dynamic> json) {
       distance: (json['distance'] as num)?.toDouble(),
       intensity: (json['intensity'] as num)?.toDouble(),
       plannedAvg: (json['plannedAvg'] as num)?.toDouble(),
-      komoot: json['komoot'] as String);
+      komoot: json['komoot'] as String,
+      participants: (json['participants'] as List)
+          ?.map((e) => e == null
+              ? null
+              : Participation.fromJson(e as Map<String, dynamic>))
+          ?.toList())
+    ..comments = (json['comments'] as List)
+        ?.map((e) =>
+            e == null ? null : Comment.fromJson(e as Map<String, dynamic>))
+        ?.toList();
 }
 
 Map<String, dynamic> _$EventToJson(Event instance) => <String, dynamic>{
@@ -34,5 +43,27 @@ Map<String, dynamic> _$EventToJson(Event instance) => <String, dynamic>{
       'distance': instance.distance,
       'intensity': instance.intensity,
       'plannedAvg': instance.plannedAvg,
-      'komoot': instance.komoot
+      'komoot': instance.komoot,
+      'participants': instance.participants == null
+          ? null
+          : _ParticipationToJsonS(instance.participants),
+      'comments': instance.comments
+    };
+
+Participation _$ParticipationFromJson(Map<String, dynamic> json) {
+  return Participation(userId: json['userId'] as String);
+}
+
+Map<String, dynamic> _$ParticipationToJson(Participation instance) =>
+    <String, dynamic>{'userId': instance.userId};
+
+Comment _$CommentFromJson(Map<String, dynamic> json) {
+  return Comment(
+      content: json['content'] as String,
+      createdAt: json['createdAt'] as String);
+}
+
+Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
+      'content': instance.content,
+      'createdAt': instance.createdAt
     };

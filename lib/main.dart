@@ -5,10 +5,17 @@ import 'package:fcsp_rad/event_service.dart';
 import 'package:fcsp_rad/pages/event.dart';
 import 'package:fcsp_rad/pages/event_add.dart';
 import 'package:fcsp_rad/pages/home.dart';
+import 'package:fcsp_rad/secret.dart';
+import 'package:fcsp_rad/secret_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:random_string/random_string.dart' as random;
 
 import './pages/event_list.dart';
+import 'dart:async';
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
   const API_KEY = "AIzaSyAyN1BthqX_T0VsGT6a4qZj56buc5gSQww";
@@ -30,15 +37,23 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final _storage = new FlutterSecureStorage();
+  var _secret;
+
   final eventService = new EventService();
   String _sender = 'the_sender_in_this_case' + random.randomAlpha(5);
   final List<Event> _events = [];
   StreamSubscription<Event> _streamSubscription;
 
-
   @override
   void initState() {
     super.initState();
+    Future<Secret> secret = SecretLoader(secretPath: "secrets.json").load();
+    secret.then((result) {
+      setState(() {
+        _secret = result;
+      });
+    });
     _init();
   }
 
@@ -66,8 +81,29 @@ class _MyAppState extends State<MyApp> {
     });
     print(_events);
   }
+
+  void _joinEvent(Event event) {
+    setState(() {
+      var modifiedEvent = eventService.addParticipant(
+          new Participation(userId: 'fooUser'), event, _sender);
+      modifiedEvent.then((er) {
+        _events.removeWhere((e) {
+         return e.id == er.id;
+        });
+        _events.add(er);
+      });
+    });
+  }
+
+  void _leaveEvent(Event event) {
+    setState(() {
+      eventService.removeParticipant(
+          new Participation(userId: 'fooUser'), event, _sender);
+    });
+  }
+
   final GlobalKey<AnimatedListState> _animateListKey =
-  new GlobalKey<AnimatedListState>();
+      new GlobalKey<AnimatedListState>();
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +128,8 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
       routes: {
-        '/': (BuildContext context) => EventList(_events, _addEvent, _addEvent),
+        '/': (BuildContext context) =>
+            EventList(_events, _addEvent, _addEvent, _joinEvent, _leaveEvent),
         '/editor': (BuildContext context) => EventEditor(_addEvent),
       },
       onGenerateRoute: (RouteSettings settings) {

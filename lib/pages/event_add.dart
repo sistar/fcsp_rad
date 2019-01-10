@@ -146,6 +146,7 @@ class _EventEditorState extends State<EventEditor> {
   TimeOfDay _time = TimeOfDay.now();
   final uuid = new Uuid();
   final Function _addEvent;
+  var locationValidated = false;
 
   _EventEditorState(this._addEvent);
 
@@ -175,7 +176,7 @@ class _EventEditorState extends State<EventEditor> {
   Future<LatLng> locate(String addr) async {
     if (addr != null && addr.length > 5) {
       List<Placemark> placemark = await Geolocator().placemarkFromAddress(addr);
-      if (placemark.length > 0) {
+      if (placemark != null && placemark.length > 0) {
         return LatLng(
             placemark[0].position.latitude, placemark[0].position.longitude);
       }
@@ -226,7 +227,12 @@ class _EventEditorState extends State<EventEditor> {
             width: 300.0,
             height: 200.0,
             child: GoogleMap(
-              onMapCreated: _onMapCreated,
+              onMapCreated: _onMapCreated, initialCameraPosition:const CameraPosition(
+              bearing: 270.0,
+              target: LatLng(51.5160895, -0.1294527),
+              tilt: 30.0,
+              zoom: 17.0,
+            )
             ),
           ),
         ),
@@ -244,6 +250,7 @@ class _EventEditorState extends State<EventEditor> {
                           ? null
                           : () {
                               locate(whereTextEditingController.text)
+                                  .catchError(handleError)
                                   .then((dynamic v) {
                                 mapController.animateCamera(
                                     CameraUpdate.newCameraPosition(
@@ -287,8 +294,16 @@ class _EventEditorState extends State<EventEditor> {
                     controller: whereTextEditingController,
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Please enter some text';
+                        return 'Please enter the location where your event will start';
                       }
+                      /* var locate2 = locate(value);
+                      locate2.catchError((e) {
+                        locationValidated = false;
+                      }).then((f) {
+                        locationValidated = true;
+                      });
+                      if (!locationValidated)
+                        return "Start Location could not be validated";*/
                     },
                     decoration: InputDecoration(
                       hintText: 'Enter event start location',
@@ -330,25 +345,30 @@ class _EventEditorState extends State<EventEditor> {
                             SnackBar(content: Text('Processing Data')));
 
                         locate(whereTextEditingController.text)
+                            .catchError(handleError)
                             .then((LatLng v) {
-                          var event = Event(
-                              name: nameTextEditingController.value.text,
-                              where: whereTextEditingController.value.text,
-                              distance: double.parse(
-                                  distanceTextEditingController1.value.text),
-                              komoot: kommotTextEditingController1.value.text,
-                              plannedAvg: 22,
-                              intensity: 1,
-                              discipline: 'road',
-                              startingTime: toAWSDateTimeString(_date),
-                              description: descriptionTimeTextEditingController
-                                  .value.text,
-                              id: uuid.v1(),
-                              lat: v.latitude,
-                              lon: v.longitude);
-                          _addEvent(event);
+                          if (v == null) {
+                          } else {
+                            var event = Event(
+                                name: nameTextEditingController.value.text,
+                                where: whereTextEditingController.value.text,
+                                distance: double.parse(
+                                    distanceTextEditingController1.value.text),
+                                komoot: kommotTextEditingController1.value.text,
+                                plannedAvg: 22,
+                                intensity: 1,
+                                discipline: 'road',
+                                startingTime: toAWSDateTimeString(_date),
+                                description:
+                                    descriptionTimeTextEditingController
+                                        .value.text,
+                                id: uuid.v1(),
+                                lat: v.latitude,
+                                lon: v.longitude);
+                            _addEvent(event);
+                            Navigator.pop(context);
+                          }
                         });
-                        Navigator.pop(context);
                       }
 
 //                  setState(() {
@@ -390,7 +410,7 @@ class _EventEditorState extends State<EventEditor> {
   }
 
   _printLatestValue() {
-    locate(whereTextEditingController.text).then((ll) {
+    locate(whereTextEditingController.text).catchError(handleError).then((ll) {
       print(
           "Second text field: ${whereTextEditingController.text} ${ll.toString()}");
     });
@@ -403,4 +423,6 @@ class _EventEditorState extends State<EventEditor> {
     // Start listening to changes
     whereTextEditingController.addListener(_printLatestValue);
   }
+
+  handleError(e) {}
 }

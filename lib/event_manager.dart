@@ -12,8 +12,10 @@ class EventManager extends StatelessWidget {
   final List<Event> _events;
   final Function _addEvent;
   final Function _deleteEvent;
+  final Function _joinEvent;
+  final Function _leaveEvent;
 
-  EventManager(this._events,this._addEvent,this._deleteEvent);
+  EventManager(this._events,this._addEvent,this._deleteEvent,this._joinEvent,this._leaveEvent);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class EventManager extends StatelessWidget {
           margin: EdgeInsets.all(10.0),
           child: EventControl(_addEvent),
         ),
-        Expanded(child: Events(_events))
+        Expanded(child: Events(_events,_joinEvent,_leaveEvent))
       ],
     );
   }

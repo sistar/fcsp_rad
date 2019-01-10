@@ -1,12 +1,13 @@
 package de.sistar.fcsprad.tasks
 
+import com.amazonaws.amplify.generated.graphql.SubscribeNewEventSubscription
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient
 import com.amazonaws.mobileconnectors.appsync.AppSyncSubscriptionCall
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.google.gson.Gson
 import de.sistar.fcsprad.AppSyncPlugin
-import de.sistar.fcsprad.SubscribeNewEventSubscription
+
 
 
 import io.flutter.plugin.common.MethodCall

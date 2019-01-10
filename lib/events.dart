@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 
 class Events extends StatelessWidget {
   List<Event> _events;
-  Events(this._events);
+  final Function _joinEvent;
+  final Function _leaveEvent;
+
+  Events(this._events, this._joinEvent, this._leaveEvent);
+
   Widget _buildEventItem(BuildContext context, int index) {
     Event element = _events[index];
     return Card(
@@ -20,17 +24,24 @@ class Events extends StatelessWidget {
       Text(element.lon?.toString() ?? ""),
       Text(element.discipline ?? ""),
       Text(element.komoot ?? "https://komoot.com/"),
+      Column(
+          children: element.participants.map((p) {
+        return Text(p.userId);
+      }).toList()),
       ButtonBar(
         alignment: MainAxisAlignment.center,
         children: <Widget>[
           FlatButton(
               child: Text('Details'),
               onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  '/event/$index'
-                );
-              })
+                Navigator.pushNamed(context, '/event/$index');
+              }),
+          FlatButton(
+            child: Text('Join'),
+            onPressed: () {
+              _joinEvent(element);
+            },
+          )
         ],
       ),
     ]));

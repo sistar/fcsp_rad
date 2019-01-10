@@ -26,7 +26,7 @@
         android:label="fcsp_rad"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAyN1BthqX_T0VsGT6a4qZj56buc5gSQww"/>
+            android:value="@string/google_places_geo_api"/>
 
         <!-- ... -->
         <!-- Service paho for retrieve all data in background -->

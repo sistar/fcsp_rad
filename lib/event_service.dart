@@ -12,6 +12,8 @@ class EventService {
   static const MUTATION_NEW_EVENT = 'createEvent';
   static const SUBSCRIBE_NEW_EVENT = 'subscribeNewEvent';
   static const SUBSCRIBE_NEW_EVENT_RESULT = 'subscribeNewEventResult';
+  static const ADD_PARTICIPANT = 'addParticipant';
+  static const REMOVE_PARTICIPANT = 'removeParticipant';
 
   static const Map<String, dynamic> _DEFAULT_PARAMS = <String, dynamic> {
     'endpoint': AWS_APP_SYNC_ENDPOINT,
@@ -30,6 +32,28 @@ class EventService {
     String jsonString = await APP_SYNC_CHANNEL.invokeMethod(QUERY_GET_ALL_EVENTS, _buildParams());
     List<dynamic> values = json.decode(jsonString);
     return values.map((value) => Event.fromJson(value)).toList();
+  }
+
+  Future<Event> addParticipant(Participation participation,Event event, String sender) async {
+    final params = {
+      "participation": Participation.toJson(participation),
+      "event": Event.toJson(event),
+      "sender": sender
+    };
+    String jsonString  = await APP_SYNC_CHANNEL.invokeMethod(ADD_PARTICIPANT,_buildParams(otherParams: params));
+    Map<String, dynamic> values = json.decode(jsonString);
+    return Event.fromJson(values);
+  }
+
+  Future<Event> removeParticipant(Participation participation,Event event, String sender) async {
+    final params = {
+      "participation": Participation.toJson(participation),
+      "event": Event.toJson(event),
+      "sender": sender
+    };
+    String jsonString  = await APP_SYNC_CHANNEL.invokeMethod(REMOVE_PARTICIPANT,_buildParams(otherParams: params));
+    Map<String, dynamic> values = json.decode(jsonString);
+    return Event.fromJson(values);
   }
 
   Future<Event> sendEvent(Event content, String sender) async {

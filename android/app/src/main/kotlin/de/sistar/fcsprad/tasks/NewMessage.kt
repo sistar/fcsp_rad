@@ -1,11 +1,11 @@
 package de.sistar.fcsprad.tasks
 
+import com.amazonaws.amplify.generated.graphql.CreateEventMutation
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient
 import com.apollographql.apollo.GraphQLCall
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.google.gson.Gson
-import de.sistar.fcsprad.AddEventMutation
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
@@ -14,7 +14,7 @@ class NewMessage(private val client: AWSAppSyncClient, private val call: MethodC
     operator fun invoke() {
         val content = call.argument<HashMap<String,Any>>("content")
 
-        val builder = AddEventMutation.builder()
+        val builder = CreateEventMutation.builder()
 
         builder.name(content?.get("name").toString())
         builder.where(content?.get("where").toString())
@@ -30,10 +30,10 @@ class NewMessage(private val client: AWSAppSyncClient, private val call: MethodC
 
         val mutation = builder.build()
 
-        client.mutate(mutation).enqueue(object : GraphQLCall.Callback<AddEventMutation.Data>() {
+        client.mutate(mutation).enqueue(object : GraphQLCall.Callback<CreateEventMutation.Data>() {
 
 
-            override fun onResponse(response: Response<AddEventMutation.Data>) {
+            override fun onResponse(response: Response<CreateEventMutation.Data>) {
                 parseResponse(response)
             }
 
@@ -44,7 +44,7 @@ class NewMessage(private val client: AWSAppSyncClient, private val call: MethodC
         })
     }
 
-    private fun parseResponse(response: Response<AddEventMutation.Data>) {
+    private fun parseResponse(response: Response<CreateEventMutation.Data>) {
         if (response.hasErrors().not()) {
             val newMessage = response.data()?.createEvent()?.let {
                 return@let mapOf(

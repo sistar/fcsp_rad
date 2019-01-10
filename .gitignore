@@ -9,3 +9,8 @@ build/
 .flutter-plugins
 .gradle/
 .idea/
+
+secrets.json
+secrets.xml
+
+lib/*.g.dart

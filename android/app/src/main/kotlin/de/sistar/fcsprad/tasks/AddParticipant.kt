@@ -1,58 +1,60 @@
 package de.sistar.fcsprad.tasks
 
-import android.util.Log
-import com.amazonaws.amplify.generated.graphql.GetEventsQuery
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient
-import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers
 import com.apollographql.apollo.GraphQLCall
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.google.gson.Gson
+import com.amazonaws.amplify.generated.graphql.AddParticipantMutation
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-class ListEvents(private val client: AWSAppSyncClient, private val call: MethodCall, private val result: MethodChannel.Result) {
+class AddParticipant(private val client: AWSAppSyncClient, private val call: MethodCall, private val result: MethodChannel.Result) {
 
     operator fun invoke() {
-        val query = GetEventsQuery.builder().build()
-        client.query(query)
-                .responseFetcher(AppSyncResponseFetchers.NETWORK_ONLY)
-                .enqueue(object : GraphQLCall.Callback<GetEventsQuery.Data>() {
+        val participation = call.argument<HashMap<String,Any>>("participation")
+        val event = call.argument<HashMap<String,Any>>("event")
 
-                    override fun onResponse(response: Response<GetEventsQuery.Data>) {
-                        Log.e("ListEvents.onResponse", "........ on response")
+        val builder = AddParticipantMutation.builder()
 
-                        parseResponse(response)
-                    }
+        builder.userId(participation?.get("userId").toString())
+        builder.startingTime(event?.get("startingTime").toString())
+        builder.eventId(event?.get("id").toString())
 
-                    override fun onFailure(e: ApolloException) {
-                        Log.e("ListEvents.onFailure", "....... on failure", e)
 
-                        result.error("onFailure", e.message, null)
-                    }
-                })
+        val mutation = builder.build()
+
+        client.mutate(mutation).enqueue(object : GraphQLCall.Callback<AddParticipantMutation.Data>() {
+
+
+            override fun onResponse(response: Response<AddParticipantMutation.Data>) {
+                parseResponse(response)
+            }
+
+            override fun onFailure(e: ApolloException) {
+                result.error("onFailure", e.message, null)
+            }
+
+        })
     }
 
-
-    private fun parseParticipants(participants: List<GetEventsQuery.Participant>?): List<Map<String, String>> {
+    private fun parseParticipants(participants: List<AddParticipantMutation.Participant>?): List<Map<String, String>> {
         return participants!!.map {
             mapOf("userId" to it.userId()!!);
         }
     }
 
-    private fun parseComments(comments: List<GetEventsQuery.Comment>?): List<Map<String, String>> {
+    private fun parseComments(comments: List<AddParticipantMutation.Comment>?): List<Map<String, String>> {
         return comments!!.map {
-             mapOf("content" to it.content(),
+            mapOf("content" to it.content(),
                     "createdAt" to it.createdAt())
         }
     }
 
-    private fun parseResponse(response: Response<GetEventsQuery.Data>) {
-        Log.e("ListEvents.parseResp", "....... parse response")
-        println("ListEvents.parseResponse")
+    private fun parseResponse(response: Response<AddParticipantMutation.Data>) {
         if (response.hasErrors().not()) {
-            val messages = response.data()?.events?.map {
-                return@map mapOf(
+            val newMessage = response.data()?.addParticipant()?.let {
+                return@let mapOf(
                         "id" to it.id(),
                         "name" to it.name(),
                         "where" to it.where(),
@@ -70,8 +72,8 @@ class ListEvents(private val client: AWSAppSyncClient, private val call: MethodC
                 )
             }
 
-            messages?.let {
-                val json = Gson().toJson(messages)
+            newMessage?.let {
+                val json = Gson().toJson(newMessage)
                 result.success(json)
             } ?: run {
                 result.success(null)
