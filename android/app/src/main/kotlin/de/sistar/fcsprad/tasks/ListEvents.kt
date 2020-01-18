@@ -1,5 +1,7 @@
 package de.sistar.fcsprad.tasks
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.amazonaws.amplify.generated.graphql.GetEventsQuery
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient
@@ -42,7 +44,7 @@ class ListEvents(private val client: AWSAppSyncClient, private val call: MethodC
 
     private fun parseComments(comments: List<GetEventsQuery.Comment>?): List<Map<String, String>> {
         return comments!!.map {
-             mapOf("content" to it.content(),
+            mapOf("content" to it.content(),
                     "createdAt" to it.createdAt())
         }
     }
@@ -72,13 +74,21 @@ class ListEvents(private val client: AWSAppSyncClient, private val call: MethodC
 
             messages?.let {
                 val json = Gson().toJson(messages)
-                result.success(json)
+
+                Handler(Looper.getMainLooper()).post {
+                    result.success(json)
+                }
             } ?: run {
-                result.success(null)
+                Handler(Looper.getMainLooper()).post {
+                    result.success(null)
+                }
             }
         } else {
             val error = response.errors().map { it.message() }.joinToString(", ")
-            result.error("Errors", error, null)
+            Handler(Looper.getMainLooper()).post {
+                result.error("Errors", error, null)
+            }
+
         }
     }
 

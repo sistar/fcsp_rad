@@ -82,12 +82,12 @@ apply plugin: 'com.amazonaws.appsync'
 
 dependencies {
 
-    implementation group: 'com.amazonaws', name: 'aws-android-sdk-appsync', version: '2.7.0'
-    implementation group: 'com.amazonaws', name: 'aws-android-sdk-appsync-api', version: '2.7.0'
+    implementation  'com.amazonaws:aws-android-sdk-appsync:2.8.3'
     implementation "com.google.code.gson:gson:2.8.5"
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
     implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
-    implementation group: 'androidx.appcompat', name: 'appcompat', version: '1.1.0-alpha01'
+    implementation group: 'androidx.appcompat', name: 'appcompat', version: '1.2.0-alpha01'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     implementation  group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
 
@@ -97,17 +97,17 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     // Robolectric environment
-    androidTestImplementation "androidx.test.ext:junit:1.1.0"
+    androidTestImplementation "androidx.test.ext:junit:1.1.1"
     androidTestImplementation 'com.github.tmurakami:dexopener:2.0.0' //only allows to open / mock classes in own package
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test:rules:1.1.1'
-    testImplementation 'androidx.test:core:1.1.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    testImplementation 'androidx.test:core:1.2.0'
     testImplementation 'org.robolectric:robolectric:4.0.2'
     testImplementation 'org.mockito:mockito-core:2.19.1'
     androidTestImplementation 'org.mockito:mockito-android:2.19.1'
 
     androidTestImplementation "com.google.truth:truth:0.42"
 
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }

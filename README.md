@@ -25,3 +25,6 @@ gradle generateApolloClasses
 
 ## generating json mappers from annotated classes for dart
 `flutter packages pub run build_runner build`
+
+API KEY is set in constants.dart
+AWS_APP_SYNC_KEY

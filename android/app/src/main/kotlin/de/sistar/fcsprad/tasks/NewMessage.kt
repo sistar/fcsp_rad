@@ -1,5 +1,7 @@
 package de.sistar.fcsprad.tasks
 
+import android.os.Handler
+import android.os.Looper
 import com.amazonaws.amplify.generated.graphql.CreateEventMutation
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient
 import com.apollographql.apollo.GraphQLCall
@@ -9,10 +11,11 @@ import com.google.gson.Gson
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
+
 class NewMessage(private val client: AWSAppSyncClient, private val call: MethodCall, private val result: MethodChannel.Result) {
 
     operator fun invoke() {
-        val content = call.argument<HashMap<String,Any>>("content")
+        val content = call.argument<HashMap<String, Any>>("content")
 
         val builder = CreateEventMutation.builder()
 
@@ -38,7 +41,9 @@ class NewMessage(private val client: AWSAppSyncClient, private val call: MethodC
             }
 
             override fun onFailure(e: ApolloException) {
-                result.error("onFailure", e.message, null)
+                Handler(Looper.getMainLooper()).post {
+                    result.error("onFailure", e.message, null)
+                }
             }
 
         })
@@ -64,13 +69,19 @@ class NewMessage(private val client: AWSAppSyncClient, private val call: MethodC
 
             newMessage?.let {
                 val json = Gson().toJson(newMessage)
-                result.success(json)
+                Handler(Looper.getMainLooper()).post {
+                    result.success(json)
+                }
             } ?: run {
-                result.success(null)
+                Handler(Looper.getMainLooper()).post {
+                    result.success(null)
+                }
             }
         } else {
             val error = response.errors().map { it.message() }.joinToString(", ")
-            result.error("Errors", error, null)
+            Handler(Looper.getMainLooper()).post {
+                result.error("Errors", error, null)
+            }
         }
     }
 

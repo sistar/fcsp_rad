@@ -20,4 +20,4 @@ targets:
 #          generate_to_json_function: true
 #          include_if_null: true
 #          nullable: true
-#          use_wrappers: false
+#         flu use_wrappers: false

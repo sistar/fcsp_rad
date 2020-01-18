@@ -31,8 +31,8 @@ class Events extends StatelessWidget {
       ButtonBar(
         alignment: MainAxisAlignment.center,
         children: <Widget>[
-          FlatButton(
-              child: Text('Details'),
+          IconButton(
+              icon: Icon(Icons.info),
               onPressed: () {
                 Navigator.pushNamed(context, '/event/$index');
               }),
@@ -41,7 +41,15 @@ class Events extends StatelessWidget {
             onPressed: () {
               _joinEvent(element);
             },
-          )
+          ),
+          IconButton(
+              icon: Icon(
+                Icons.library_add,
+                color: Theme.of(context).accentColor,
+              ),
+              onPressed: (){
+                _joinEvent(element);
+              })
         ],
       ),
     ]));
